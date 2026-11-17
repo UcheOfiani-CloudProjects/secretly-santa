@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import TopBar from '@/components/TopBar';
 import Concierge from '@/components/Concierge';
+import SealedReveal from '@/components/SealedReveal';
 import { loadRoom } from '@/lib/room';
 import { fmtDate, padNo } from '@/lib/format';
 import { IDENTITY_FIELDS } from '@/lib/identity';
@@ -29,6 +30,7 @@ export default async function RecipientPage({ params }: { params: Promise<{ id: 
           {room.reveal_mode === 'mystery' && <p className="small muted">Mystery mode: tag your wrapped gift with “{r.code_name}”.</p>}
         </div>
 
+        <SealedReveal roomId={id}>
         <div className="card-ivory stack-lg">
           <span className="eyebrow">Christmas Identity</span>
           {filled.length === 0 ? (
@@ -40,6 +42,7 @@ export default async function RecipientPage({ params }: { params: Promise<{ id: 
             </div>
           ))}
         </div>
+        </SealedReveal>
 
         <Concierge roomId={id} defaultBudget={digits} />
       </div>

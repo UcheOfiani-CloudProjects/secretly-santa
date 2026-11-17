@@ -1,7 +1,25 @@
+const TZ = 'Africa/Lagos';
+
+/** Day-only display, always in Lagos time, e.g. "Fri 18 Dec". */
 export function fmtDate(iso: string) {
-  return new Date(iso).toLocaleString('en-GB', {
-    weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit',
-  });
+  return new Date(iso).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ });
+}
+
+/** ISO timestamp -> "YYYY-MM-DD" in Lagos. */
+export function toDay(iso: string) {
+  return iso ? new Date(iso).toLocaleDateString('en-CA', { timeZone: TZ }) : '';
+}
+
+/** "YYYY-MM-DD" -> timestamp at the Lagos day boundary (registration closes at day's end; others open at day's start). */
+export function fromDay(day: string, end = false) {
+  if (!day) return '';
+  return new Date(`${day}${end ? 'T23:59:59' : 'T00:00:00'}+01:00`).toISOString();
+}
+
+/** Whole days from today (Lagos) to the given day. */
+export function daysUntil(iso: string) {
+  const day = (d: Date) => Date.parse(d.toLocaleDateString('en-CA', { timeZone: TZ }));
+  return Math.max(0, Math.round((day(new Date(iso)) - day(new Date())) / 86400000));
 }
 
 export function nextEvent(room: { registration_deadline: string; draw_date: string; exchange_date: string; status: string }) {

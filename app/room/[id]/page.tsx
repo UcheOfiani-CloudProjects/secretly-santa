@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import TopBar from '@/components/TopBar';
 import Countdown from '@/components/Countdown';
+import AdventStrip from '@/components/AdventStrip';
 import { loadRoom } from '@/lib/room';
 import { fmtDate, nextEvent, padNo } from '@/lib/format';
 
@@ -45,7 +46,7 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
           </div>
         )}
 
-        {ev && <div className="card"><Countdown to={ev.at} label={ev.label} /></div>}
+        {ev && <div className="card stack"><Countdown to={ev.at} label={ev.label} /><AdventStrip reg={room.registration_deadline} draw={room.draw_date} gift={room.exchange_date} /></div>}
 
         {/* The Big Draw */}
         <div className="card card-gold stack">

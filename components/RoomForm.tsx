@@ -2,19 +2,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import DayPicker from './DayPicker';
+import { toDay, fromDay } from '@/lib/format';
 
 export type RoomValues = {
   id?: string; name: string; description: string; registration_deadline: string; draw_date: string; exchange_date: string;
   budget_note: string; rules: string; announcement: string; reveal_mode: 'mystery' | 'reveal'; name_theme: 'treats' | 'winter' | 'ornaments'; status?: string;
 };
 
-const toLocal = (iso: string) => {
-  if (!iso) return '';
-  const d = new Date(iso);
-  const off = d.getTimezoneOffset();
-  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
-};
-const fromLocal = (v: string) => new Date(v).toISOString();
 
 const THEMES = [
   { v: 'treats', label: 'Christmas treats', eg: 'Velvet Cocoa, Honey Gingerbread, Sugared Puff Puff' },
@@ -36,7 +31,10 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
   const set = (k: keyof RoomValues) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { setSaved(false); setV({ ...v, [k]: e.target.value }); };
 
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault(); setError(''); setBusy(true);
+    e.preventDefault(); setError('');
+    if (!v.registration_deadline || !v.draw_date || !v.exchange_date) { setError('Pick all three days on the calendar.'); return; }
+    if (!(v.registration_deadline < v.draw_date && v.draw_date <= v.exchange_date)) { setError('Order the days: registration closes first, then the draw, then the gift exchange.'); return; }
+    setBusy(true);
     const sb = supabaseBrowser();
     if (editing) {
       const { error } = await sb.rpc('update_room', {
@@ -56,15 +54,6 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
       if (error) setError(error.message); else router.push(`/room/${data}/organise`);
     }
   };
-
-  const dateInput = (k: 'registration_deadline' | 'draw_date' | 'exchange_date', label: string, hint: string, disabled = false) => (
-    <div>
-      <label htmlFor={k}>{label}</label>
-      <input id={k} type="datetime-local" required disabled={disabled} value={toLocal(v[k])}
-        onChange={(e) => { setSaved(false); setV({ ...v, [k]: e.target.value ? fromLocal(e.target.value) : '' }); }} />
-      <p className="hint">{hint}</p>
-    </div>
-  );
 
   return (
     <form onSubmit={submit} className="stack-lg">
@@ -86,9 +75,12 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
 
       <div className="card stack">
         <h3>Key dates</h3>
-        {dateInput('registration_deadline', 'Registration closes', 'After this, nobody can join and profiles are locked.', locked)}
-        {dateInput('draw_date', 'The Big Draw opens', 'From this moment, everyone can tap to reveal who they’re buying for.')}
-        {dateInput('exchange_date', 'Gift exchange', 'When everyone hands over their gifts.')}
+        <p className="hint">Pick each day on the calendar. Registration closes at the end of its day; the draw opens at the start of its day.</p>
+        <DayPicker
+          lockedReg={locked}
+          value={{ registration_deadline: toDay(v.registration_deadline), draw_date: toDay(v.draw_date), exchange_date: toDay(v.exchange_date) }}
+          onChange={(k, day) => { setSaved(false); setV({ ...v, [k]: fromDay(day, k === 'registration_deadline') }); }}
+        />
       </div>
 
       <div className="card stack">

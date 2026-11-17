@@ -25,14 +25,20 @@ export default function Entrance() {
 
   return (
     <main className="entrance">
-      <div className={`entrance-inner ${leaving ? 'leaving' : ''}`}>
-        <span className="eyebrow">An invitation to something magical</span>
-        <h1 style={{ margin: 0 }}><Wordmark size="lg" /></h1>
-        <p className="tagline">A little mystery. A thoughtful gift. A Christmas to remember.</p>
-        <button className="btn btn-invite" onClick={enter} style={{ marginTop: 12 }}>
-          ENTER THE CHRISTMAS WORLD <span className="arrow">→</span>
-        </button>
-        <p className="whisper">Take a moment. The magic is just behind the door.</p>
+      <div className={`stage ${leaving ? 'leaving' : ''}`}>
+        <div className="tint" />
+        <div className="vignette" />
+        <div className="head">
+          <span className="eyebrow-s emb">An invitation to something magical</span>
+          <h1 className="title emb" aria-label="Secretly Santa">Secretly<br />Santa</h1>
+        </div>
+        <div className="treetop" aria-hidden />
+        <div className="frame" aria-hidden />
+        <div className="foot">
+          <p className="tag">A little mystery.<br />A thoughtful gift.<br />A Christmas to remember.</p>
+          <button className="cta" onClick={enter}>ENTER THE CHRISTMAS WORLD <span className="arrow">→</span></button>
+          <p className="whisper">Take a moment. The magic is just behind the door.</p>
+        </div>
       </div>
       <div className={`veil ${veil}`} aria-hidden>
         <div className="glow" />
