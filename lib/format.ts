@@ -34,3 +34,11 @@ export function nextEvent(room: { registration_deadline: string; draw_date: stri
 export function padNo(n: number) {
   return String(n).padStart(3, '0');
 }
+
+/** "Monday, 15 December" in Lagos time. */
+export function fmtLong(iso: string) {
+  const d = new Date(iso);
+  const wd = d.toLocaleDateString('en-GB', { weekday: 'long', timeZone: TZ });
+  const rest = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: TZ });
+  return `${wd}, ${rest}`;
+}

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'Secretly Santa',
   description: 'A little mystery. A thoughtful gift. A Christmas to remember.',
   icons: { apple: '/apple-touch-icon.png' },
-  appleWebApp: { capable: true, title: 'Secret Santa', statusBarStyle: 'black-translucent' },
+  appleWebApp: { capable: true, title: 'Secretly Santa', statusBarStyle: 'black-translucent' },
 };
 export const viewport: Viewport = { themeColor: '#1A0A10', width: 'device-width', initialScale: 1 };
 

@@ -396,3 +396,22 @@ h1 { text-shadow: 0 2px 14px rgba(0,0,0,.4); }
 .recip-label { width: 88px; flex: none; font: 500 .62rem var(--body); letter-spacing: .16em; text-transform: uppercase; color: rgba(86,24,39,.55); padding-top: 4px; }
 .recip-val { font-size: .9rem; line-height: 1.5; white-space: pre-wrap; }
 .tagchip { display: inline-flex; align-items: center; height: 32px; padding: 0 13px; border-radius: 99px; background: rgba(216,182,111,.25); border: 1px solid var(--gold); color: var(--wine); font: 500 .8rem var(--body); }
+
+/* ---------- room screen ---------- */
+.room-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; position: relative; z-index: 2; }
+.chip-me { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 99px; background: rgba(251,245,237,.1); border: 1px solid rgba(216,182,111,.4); font-size: .75rem; font-weight: 500; color: var(--ivory); text-decoration: none; }
+.chip-me span { width: 24px; height: 24px; border-radius: 50%; background: var(--cranberry); display: inline-flex; align-items: center; justify-content: center; font: 600 .75rem var(--heading); color: var(--gold); }
+.hero { position: relative; border-radius: 28px; overflow: hidden; padding: 26px 20px 24px; text-align: center; background: linear-gradient(160deg, #B51F35, #561827 70%); border: 1px solid rgba(216,182,111,.55); box-shadow: 0 20px 50px rgba(181,31,53,.3); display: flex; flex-direction: column; align-items: center; }
+.hero-eyebrow { font: 500 .7rem var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.hero-num { font-family: var(--heading); font-weight: 600; font-size: 4.5rem; line-height: 1; margin-top: 8px; }
+.hero-unit { font-family: var(--heading); font-weight: 500; font-size: 1.25rem; margin-top: 2px; color: rgba(251,245,237,.9); }
+.hero-date { display: inline-block; margin-top: 16px; padding: 7px 16px; border-radius: 99px; background: rgba(26,10,16,.45); font-size: .75rem; font-weight: 500; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 22px; text-decoration: none; }
+.step b { display: block; font-family: var(--heading); font-weight: 500; font-size: 1.05rem; }
+.step small { display: block; font-size: .75rem; margin-top: 2px; }
+.step-dot { width: 40px; height: 40px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font: 600 1rem var(--heading); color: var(--ivory); font-style: normal; }
+.step-done { background: var(--ivory); color: var(--wine); } .step-done small { color: rgba(86,24,39,.65); }
+.step-now { background: rgba(251,245,237,.08); border: 1px solid rgba(216,182,111,.4); color: var(--ivory); } .step-now small { color: rgba(251,245,237,.65); }
+.step-locked { background: rgba(251,245,237,.04); border: 1px dashed rgba(251,245,237,.25); opacity: .7; color: var(--ivory); } .step-locked small { color: rgba(251,245,237,.65); }
+.step-dot-empty { border: 1.5px solid rgba(251,245,237,.4); background: transparent; }

@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Secretly Santa',
-    short_name: 'Secret Santa',
+    short_name: 'Secretly Santa',
     description: 'A little mystery. A thoughtful gift. A Christmas to remember.',
     start_url: '/home',
     scope: '/',

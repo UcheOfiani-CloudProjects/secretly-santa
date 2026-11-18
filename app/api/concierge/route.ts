@@ -45,6 +45,7 @@ Rules:
 - Every suggestion must clearly connect to something specific they wrote. Never give generic filler.
 - Stay within the budget. Include at least one budget-friendly option well under it and one creative or personalised idea.
 - Strictly respect everything under "Things to AVOID", including allergies.
+- If "Favourite kinds of gifts" says Men's gifts or Women's gifts, only suggest items that suit that style (for example, no earrings for someone who chose Men's gifts). "Unisex" or not given means keep ideas gender-neutral.
 - Suggest things genuinely obtainable where the giver is shopping. For Nigeria, think of what is actually available there (local markets, malls, Jumia, Konga, Instagram vendors, local artisans) and price in naira.
 - Prices are rough ranges; never claim exact current prices.
 - British English. Warm, concise.

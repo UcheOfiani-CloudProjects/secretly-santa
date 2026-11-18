@@ -10,13 +10,13 @@ export default function IdentityForm({ roomId, initial, locked }: { roomId: stri
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
-  const toggle = (k: 'colours' | 'treats', opt: string) => {
+  const toggle = (k: 'colours' | 'treats' | 'gift_types', opt: string) => {
     const list = (v[k] ?? '').split(/[,;]/).map((x) => x.trim()).filter(Boolean);
     const has = list.some((x) => x.toLowerCase() === opt.toLowerCase());
     const next = has ? list.filter((x) => x.toLowerCase() !== opt.toLowerCase()) : [...list, opt];
     setSaved(false); setV({ ...v, [k]: next.join(', ') });
   };
-  const isOn = (k: 'colours' | 'treats', opt: string) => (v[k] ?? '').split(/[,;]/).some((x) => x.trim().toLowerCase() === opt.toLowerCase());
+  const isOn = (k: 'colours' | 'treats' | 'gift_types', opt: string) => (v[k] ?? '').split(/[,;]/).some((x) => x.trim().toLowerCase() === opt.toLowerCase());
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setError(''); setSaved(false);
@@ -35,10 +35,10 @@ export default function IdentityForm({ roomId, initial, locked }: { roomId: stri
         <div key={f.key} className="idfield">
           <label htmlFor={f.key}><h3>{f.title}{'required' in f && f.required ? '' : <span style={{ fontWeight: 400, fontSize: '0.8rem', color: 'rgba(86,24,39,0.5)' }}> · optional</span>}</h3></label>
           {f.hint && <p className="hint" style={{ marginTop: 0, marginBottom: 8 }}>{f.hint}</p>}
-          {!locked && (f.key === 'colours' || f.key === 'treats') && (
+          {!locked && (f.key === 'colours' || f.key === 'treats' || f.key === 'gift_types') && (
             <div className="chip-row">
-              {(f.key === 'colours' ? ['Cranberry', 'Gold', 'Forest green', 'Blush', 'Navy', 'Black', 'White'] : ['Chin chin', 'Chocolate', 'Popcorn', 'Fruit', 'Biscuits', 'Puff puff']).map((o) => (
-                <button type="button" key={o} className={`chip ${isOn(f.key as 'colours' | 'treats', o) ? 'on' : ''}`} onClick={() => toggle(f.key as 'colours' | 'treats', o)}>{o}</button>
+              {(f.key === 'colours' ? ['Cranberry', 'Gold', 'Forest green', 'Blush', 'Navy', 'Black', 'White'] : f.key === 'gift_types' ? ['Men’s gifts', 'Women’s gifts', 'Unisex, anything goes'] : ['Chin chin', 'Chocolate', 'Popcorn', 'Fruit', 'Biscuits', 'Puff puff']).map((o) => (
+                <button type="button" key={o} className={`chip ${isOn(f.key as 'colours' | 'treats' | 'gift_types', o) ? 'on' : ''}`} onClick={() => toggle(f.key as 'colours' | 'treats' | 'gift_types', o)}>{o}</button>
               ))}
             </div>
           )}

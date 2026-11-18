@@ -6,7 +6,8 @@ const LABEL: Record<string, string> = { loves: 'Loves', wants: 'Would love', nee
 /** What your recipient wrote, on a cranberry-topped card. */
 export default function RecipientCard({ codeName, number, identity }: { codeName: string; number: string; identity: Identity }) {
   const [a, ...b] = codeName.split(' ');
-  const rows = IDENTITY_FIELDS.filter((f) => !['colours', 'treats'].includes(f.key) && identity[f.key]);
+  const rows = IDENTITY_FIELDS.filter((f) => !['colours', 'treats', 'gift_types'].includes(f.key) && identity[f.key]);
+  const style = chips(identity.gift_types);
   const tags = [...chips(identity.colours), ...chips(identity.treats)];
   return (
     <div className="recip">
@@ -18,6 +19,9 @@ export default function RecipientCard({ codeName, number, identity }: { codeName
       <div className="recip-body">
         {tags.length > 0 && (
           <div className="recip-row"><div className="recip-label">Favourites</div><div className="keep-chips">{tags.map((t) => <span key={t} className="tagchip">{t}</span>)}</div></div>
+        )}
+        {style.length > 0 && (
+          <div className="recip-row"><div className="recip-label">Gift style</div><div className="keep-chips">{style.map((t) => <span key={t} className="tagchip">{t}</span>)}</div></div>
         )}
         {rows.map((f) => (
           <div key={f.key} className="recip-row">

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import TopBar from '@/components/TopBar';
-import Countdown from '@/components/Countdown';
+import Wordmark from '@/components/Wordmark';
 import AdventStrip from '@/components/AdventStrip';
 import IdentityCard from '@/components/IdentityCard';
 import { loadRoom } from '@/lib/room';
-import { fmtDate, nextEvent, padNo } from '@/lib/format';
+import { fmtDate, fmtLong, daysUntil, nextEvent, padNo } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,15 +26,19 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
 
   return (
     <main className="page fade-in">
-      <TopBar signedIn back={{ href: '/home', label: 'Home' }} />
+      <div className="room-bar">
+        <Wordmark size="sm" href="/home" />
+        <Link href={`/room/${id}/identity`} className="chip-me" aria-label="My profile">
+          <span>{me!.code_name.charAt(0)}</span>{me!.code_name}
+        </Link>
+      </div>
       <div className="stack-lg">
-        <div className="stack" style={{ gap: 10 }}>
-          <span className="eyebrow">Christmas room</span>
-          <h1>{room.name}</h1>
+        <div className="stack" style={{ gap: 8 }}>
+          <span className="eyebrow">Your room</span>
+          <h1 style={{ fontSize: 'clamp(1.8rem, 7vw, 2.2rem)', lineHeight: 1.1 }}>{room.name}</h1>
           {room.description && <p className="muted">{room.description}</p>}
           <div className="row" style={{ gap: 8 }}>
-            <span className={`pill ${registrationOpen ? 'pill-green' : ''}`}>{registrationOpen ? 'Registration open' : room.status === 'drawn' ? 'Draw complete' : 'Registration closed'}</span>
-            <span className="pill">{list.length} participants</span>
+            <span className="pill">{list.length} {list.length === 1 ? 'Santa' : 'Santas'}</span>
             {room.budget_note && <span className="pill pill-gold">Budget {room.budget_note}</span>}
             {isOrganiser && <Link href={`/room/${id}/organise`} className="pill pill-gold">Manage room →</Link>}
           </div>
@@ -47,7 +51,56 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
           </div>
         )}
 
-        {ev && <div className="card stack"><Countdown to={ev.at} label={ev.label} /><AdventStrip reg={room.registration_deadline} draw={room.draw_date} gift={room.exchange_date} /></div>}
+        {ev && (
+          <div className="hero">
+            <span className="hero-eyebrow">{ev.label}</span>
+            <div className="hero-num">{daysUntil(ev.at)}</div>
+            <div className="hero-unit">{daysUntil(ev.at) === 1 ? 'day to go' : 'days to go'}</div>
+            <span className="hero-date">{fmtLong(ev.at)}</span>
+          </div>
+        )}
+
+        <div className="stack" style={{ gap: 12 }}>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <h2 style={{ fontSize: '1.4rem' }}>The countdown</h2>
+            <span className="eyebrow" style={{ color: 'var(--ivory-50)' }}>{new Date().toLocaleDateString('en-GB', { month: 'long', timeZone: 'Africa/Lagos' })}</span>
+          </div>
+          <AdventStrip reg={room.registration_deadline} draw={room.draw_date} gift={room.exchange_date} />
+        </div>
+
+        <div className="steps">
+          <Link href={`/room/${id}/identity`} className={`step ${profileDone ? 'step-done' : 'step-now'}`}>
+            <i className="step-dot" style={{ background: profileDone ? 'var(--evergreen)' : 'var(--red)' }}>{profileDone ? '✓' : '1'}</i>
+            <div><b>{profileDone ? 'Identity sealed' : 'Fill in your Christmas Identity'}</b><small>{profileDone ? 'Your Santa knows what you love.' : 'So your Santa can choose something you’ll love.'}</small></div>
+          </Link>
+          {a.state === 'ready' ? (
+            <Link href={`/room/${id}/draw`} className="step step-now">
+              <i className="step-dot" style={{ background: 'var(--red)' }}>✦</i>
+              <div><b>Open your envelope</b><small>The names are in. Tap to meet your person.</small></div>
+            </Link>
+          ) : a.state === 'revealed' ? (
+            <div className="step step-done">
+              <i className="step-dot" style={{ background: 'var(--evergreen)' }}>✓</i>
+              <div><b>Big draw done</b><small>You know who you’re Secret Santa to.</small></div>
+            </div>
+          ) : (
+            <div className="step step-now">
+              <i className="step-dot" style={{ background: 'var(--red)' }}>2</i>
+              <div><b>Wait for the big draw</b><small>Opens on {fmtDate(room.draw_date)}.</small></div>
+            </div>
+          )}
+          {a.state === 'revealed' && a.recipient ? (
+            <Link href={`/room/${id}/recipient`} className="step step-now">
+              <i className="step-dot" style={{ background: 'var(--gold)', color: 'var(--wine)' }}>♥</i>
+              <div><b>Meet your person: <span className="codename">{a.recipient.code_name}</span></b><small>Their Christmas Identity and your Gift Concierge.</small></div>
+            </Link>
+          ) : (
+            <div className="step step-locked">
+              <i className="step-dot step-dot-empty">3</i>
+              <div><b>Meet your person</b><small>Locked until the draw.</small></div>
+            </div>
+          )}
+        </div>
 
         {profileDone && (
           <div className="stack" style={{ gap: 10 }}>
@@ -58,55 +111,6 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
             <IdentityCard compact codeName={me!.code_name} number={padNo(me!.number)} roomName={room.name} identity={identity as never} />
           </div>
         )}
-
-        {/* The Big Draw */}
-        <div className="card card-gold stack">
-          <span className="eyebrow">The Big Draw</span>
-          {a.state === 'revealed' && a.recipient ? (
-            <>
-              <h2>You’re Secret Santa to <span className="codename">{a.recipient.code_name}</span></h2>
-              {a.recipient.display_name && <p className="muted">That’s {a.recipient.display_name}. Keep it secret!</p>}
-              <div className="row">
-                <Link className="btn" href={`/room/${id}/recipient`}>Open their Christmas Identity</Link>
-              </div>
-            </>
-          ) : a.state === 'ready' ? (
-            <>
-              <h2>Your recipient is waiting</h2>
-              <p className="muted">The names are in! Open your envelope when you’re ready. Once it’s open, it’s yours to keep secret.</p>
-              <Link className="btn btn-invite" href={`/room/${id}/draw`}>Discover my recipient →</Link>
-            </>
-          ) : a.state === 'waiting' ? (
-            <>
-              <h2>Names are drawn and sealed</h2>
-              <p className="muted">Come back on <strong>{fmtDate(room.draw_date)}</strong> to discover who you’re buying for.</p>
-            </>
-          ) : (
-            <>
-              <h2>Not drawn yet</h2>
-              <p className="muted">Once registration closes, the organiser seals the draw. It opens to everyone on <strong>{fmtDate(room.draw_date)}</strong>.</p>
-            </>
-          )}
-        </div>
-
-        {/* My identity */}
-        <div className="card-ivory stack">
-          <span className="eyebrow">Your secret identity</span>
-          <div className="row" style={{ justifyContent: 'space-between' }}>
-            <div>
-              <p className="muted small">Participant {padNo(me!.number)}</p>
-              <h2 style={{ fontSize: '2rem' }}>{me!.code_name}</h2>
-            </div>
-          </div>
-          <p className="muted">
-            {profileDone ? 'Your Christmas Identity is filled in. Only your Secret Santa will ever see it.' : 'Your Secret Santa can’t see anything about you yet. Fill in your Christmas Identity so they can choose something you’ll love.'}
-          </p>
-          <div className="row">
-            <Link className="btn" href={`/room/${id}/identity`}>
-              {registrationOpen ? (profileDone ? 'Edit my Christmas Identity' : 'Fill in my Christmas Identity') : 'View my Christmas Identity'}
-            </Link>
-          </div>
-        </div>
 
         <div className="grid-2">
           <div className="card stack" style={{ gap: 10 }}>
