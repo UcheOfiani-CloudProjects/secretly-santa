@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type Key = 'registration_deadline' | 'draw_date' | 'exchange_date';
 const META: Record<Key, { label: string; cls: string; dot: string }> = {
-  registration_deadline: { label: 'Registration closes', cls: 'reg', dot: '#D8B66F' },
+  registration_deadline: { label: 'Sign-up closes', cls: 'reg', dot: '#D8B66F' },
   draw_date: { label: 'The Big Draw', cls: 'draw', dot: '#B51F35' },
   exchange_date: { label: 'Gift exchange', cls: 'gift', dot: '#29483B' },
 };
@@ -34,7 +34,7 @@ export default function DayPicker({ value, onChange, lockedReg = false }: {
       <div className="dp-tabs">
         {ORDER.map((k) => (
           <button type="button" key={k} className={`dp-tab dp-${META[k].cls} ${active === k ? 'on' : ''}`} onClick={() => setActive(k)}>
-            {META[k].label}
+            {ORDER.indexOf(k) + 1} · {META[k].label}
           </button>
         ))}
       </div>
@@ -51,7 +51,7 @@ export default function DayPicker({ value, onChange, lockedReg = false }: {
           const disabled = day < todayStr || (lockedReg && active === 'registration_deadline');
           return (
             <button type="button" key={i} disabled={disabled} className={`dp-day ${o ? 'd-' + META[o].cls : ''}`}
-              onClick={() => onChange(active, day)}>{Number(day.slice(8))}</button>
+              onClick={() => { onChange(active, day); const i = ORDER.indexOf(active); if (i < ORDER.length - 1 && !value[ORDER[i + 1]]) setActive(ORDER[i + 1]); }}>{Number(day.slice(8))}</button>
           );
         })}
       </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type Gift = { title: string; why: string; price_range: string; where: string; category: string };
 
-export default function Concierge({ roomId, defaultBudget }: { roomId: string; defaultBudget?: string }) {
+export default function Concierge({ roomId, defaultBudget, forName }: { roomId: string; defaultBudget?: string; forName?: string }) {
   const [currency, setCurrency] = useState<'NGN' | 'USD'>('NGN');
   const [budget, setBudget] = useState(defaultBudget ?? '');
   const [location, setLocation] = useState('Lagos, Nigeria');
@@ -32,8 +32,8 @@ export default function Concierge({ roomId, defaultBudget }: { roomId: string; d
     <div className="card card-gold stack-lg">
       <div className="stack" style={{ gap: 6 }}>
         <span className="eyebrow">Gift Concierge</span>
-        <h2>Ideas made for them, not for anyone</h2>
-        <p className="muted small">Suggestions are based on what your recipient actually wrote. Prices are rough guides — always check before you buy.</p>
+        <h2>{forName ? `Ideas picked just for ${forName}` : 'Ideas made for them, not for anyone'}</h2>
+        <p className="muted small">Suggestions are based on what your recipient actually wrote. Prices are rough guides, so check before you buy.</p>
       </div>
       <form onSubmit={ask} className="stack">
         <div className="row" style={{ alignItems: 'flex-end' }}>

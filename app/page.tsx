@@ -1,12 +1,14 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import Wordmark from '@/components/Wordmark';
+import { useEffect, useMemo, useState } from 'react';
+import Snow from '@/components/Snow';
 
 export default function Entrance() {
   const router = useRouter();
   const [leaving, setLeaving] = useState(false);
   const [veil, setVeil] = useState<'' | 'on' | 'on fade'>('');
+
+  useEffect(() => { document.body.classList.add('on-entrance'); return () => document.body.classList.remove('on-entrance'); }, []);
 
   const sparks = useMemo(
     () => Array.from({ length: 18 }, (_, i) => {
@@ -27,6 +29,7 @@ export default function Entrance() {
     <main className="entrance">
       <div className={`stage ${leaving ? 'leaving' : ''}`}>
         <div className="tint" />
+        <Snow />
         <div className="vignette" />
         <div className="head">
           <span className="eyebrow-s emb">An invitation to something magical</span>

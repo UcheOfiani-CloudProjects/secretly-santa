@@ -38,7 +38,7 @@ export function ParticipantsPanel({ roomId, people, drawn }: { roomId: string; p
     setConfirming(null);
     if (error) { setError(error.message); return; }
     setMsg(drawn && data
-      ? `${p.display_name} was removed. The person who was buying for them (${data}) has a new recipient and will need to open the envelope again — let the room know.`
+      ? `${p.display_name} was removed. The person who was buying for them (${data}) has a new recipient and will need to open the envelope again, so let them know.`
       : `${p.display_name} was removed.`);
     router.refresh();
   };
@@ -49,7 +49,7 @@ export function ParticipantsPanel({ roomId, people, drawn }: { roomId: string; p
         <h3>Participants</h3>
         <span className="pill">{people.length} joined · {complete} identities ready</span>
       </div>
-      {people.length === 0 ? <p className="muted small">Nobody yet — share the invite link.</p> : (
+      {people.length === 0 ? <p className="muted small">No one’s here yet. Send out your invite link.</p> : (
         <div className="table-wrap">
           <table className="table">
             <thead><tr><th>No.</th><th>Name</th><th className="hide-mobile">Code name</th><th>Identity</th><th></th></tr></thead>
@@ -131,13 +131,13 @@ export function DrawPanel({ roomId, count, incomplete, deadlinePassed }: { roomI
     setBusy(true); setError('');
     const { error } = await supabaseBrowser().rpc('run_draw', { p_room: roomId });
     setBusy(false); setConfirm(false);
-    if (error) setError(error.message); else router.refresh();
+    if (error) setError(error.message); else { fetch('/api/push/drawn', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ roomId }) }).catch(() => {}); router.refresh(); }
   };
   return (
     <div className="card card-gold stack">
       <span className="eyebrow">Close registration & seal the draw</span>
       <p className="muted small">
-        This closes the room to new people, locks everyone’s Christmas Identity and secretly assigns every Santa. Nobody — including you — can see the assignments.
+        This closes the room to new people, locks everyone’s Christmas Identity and secretly assigns every Santa. Nobody, including you, can see the assignments.
         Participants can open their envelopes from the draw date.
       </p>
       {!deadlinePassed && <p className="small">The registration deadline hasn’t passed yet. You can still seal early if everyone is in.</p>}

@@ -13,9 +13,9 @@ export default async function Create() {
       <TopBar signedIn={!!user} back={{ href: '/home', label: 'Home' }} />
       <div className="stack-lg">
         <div className="stack" style={{ gap: 8 }}>
-          <span className="eyebrow">For organisers</span>
-          <h1>Create a Christmas room</h1>
-          <p className="muted">You’ll manage the room, but you won’t see who drew whom. That stays secret — even from you.</p>
+          <span className="eyebrow">Organiser</span>
+          <h1>Start a <span style={{ color: 'var(--gold)' }}>Christmas exchange</span></h1>
+          <p className="muted">Name it, pick three days, set a budget. That’s all it takes. You run the room, but you won’t see who drew whom.</p>
         </div>
         {user ? <RoomForm /> : <SignIn next="/create" intro="Sign in first so the room is saved to your account." />}
       </div>

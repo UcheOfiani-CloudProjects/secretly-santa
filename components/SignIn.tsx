@@ -26,7 +26,7 @@ export default function SignIn({ next, intro }: { next?: string; intro?: string 
     e.preventDefault(); setError(''); setBusy(true);
     const { error } = await supabaseBrowser().auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'email' });
     setBusy(false);
-    if (error) { setError('That code didn’t work. Check it, or send a new one.'); return; }
+    if (error) { setError('Hmm, that code didn’t take. Try again, or ask for a fresh one.'); return; }
     if (next) router.push(next);
     router.refresh();
   };
@@ -50,7 +50,7 @@ export default function SignIn({ next, intro }: { next?: string; intro?: string 
         <form onSubmit={verify} className="stack">
           <div>
             <h2>Check your email</h2>
-            <p className="muted" style={{ marginTop: 6 }}>We sent a code to <strong>{email}</strong>. It may take a minute — check spam too.</p>
+            <p className="muted" style={{ marginTop: 6 }}>Code on its way to <strong>{email}</strong>. Give it a minute, and peek in spam if it’s shy.</p>
           </div>
           <div>
             <label htmlFor="code">Your code</label>

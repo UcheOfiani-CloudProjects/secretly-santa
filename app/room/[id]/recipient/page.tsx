@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import TopBar from '@/components/TopBar';
 import Concierge from '@/components/Concierge';
 import SealedReveal from '@/components/SealedReveal';
+import RecipientCard from '@/components/RecipientCard';
 import { loadRoom } from '@/lib/room';
 import { fmtDate, padNo } from '@/lib/format';
 import { IDENTITY_FIELDS } from '@/lib/identity';
@@ -22,7 +23,7 @@ export default async function RecipientPage({ params }: { params: Promise<{ id: 
       <TopBar signedIn back={{ href: `/room/${id}`, label: 'Room' }} />
       <div className="stack-lg">
         <div className="stack" style={{ gap: 8 }}>
-          <span className="eyebrow">My Recipient</span>
+          <span className="eyebrow">Step 3 of 3 · You are Secret Santa to</span>
           <h1>Shopping for <span className="codename">{r.code_name}</span></h1>
           <p className="muted">
             Participant {padNo(Number(r.number))}{r.display_name ? <> · <strong>{r.display_name}</strong></> : ''} · Exchange on {fmtDate(room.exchange_date)}
@@ -31,20 +32,14 @@ export default async function RecipientPage({ params }: { params: Promise<{ id: 
         </div>
 
         <SealedReveal roomId={id}>
-        <div className="card-ivory stack-lg">
-          <span className="eyebrow">Christmas Identity</span>
           {filled.length === 0 ? (
-            <p className="muted">They didn’t fill in their Christmas Identity. The Gift Concierge can still suggest safe, thoughtful ideas.</p>
-          ) : filled.map((f) => (
-            <div key={f.key} className="idfield">
-              <h3 style={f.key === 'avoid' ? { color: 'var(--red)' } : undefined}>{f.title}</h3>
-              <p className="value">{r[f.key]}</p>
-            </div>
-          ))}
-        </div>
+            <div className="card-ivory"><p className="muted" style={{ color: 'var(--wine)' }}>They didn’t fill in their Christmas Identity. The Gift Concierge can still suggest safe, thoughtful ideas.</p></div>
+          ) : (
+            <RecipientCard codeName={String(r.code_name)} number={padNo(Number(r.number))} identity={r as never} />
+          )}
         </SealedReveal>
 
-        <Concierge roomId={id} defaultBudget={digits} />
+        <Concierge roomId={id} defaultBudget={digits} forName={String(r.code_name)} />
       </div>
     </main>
   );

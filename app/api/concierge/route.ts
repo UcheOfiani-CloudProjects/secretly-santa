@@ -98,6 +98,6 @@ Give exactly 5 suggestions.`;
     return NextResponse.json({ suggestions, tip: String(json.tip ?? ''), remaining });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: 'The Concierge got tongue-tied. Try again.' }, { status: 502 });
+    return NextResponse.json({ error: 'The Concierge got tongue-tied. Give it another go.' }, { status: 502 });
   }
 }

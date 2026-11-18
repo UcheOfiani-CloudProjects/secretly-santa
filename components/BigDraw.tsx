@@ -41,7 +41,7 @@ export default function BigDraw({ roomId, decoys, initial }: { roomId: string; d
           <div className="reveal-name">{rec.code_name}</div>
           <p className="muted">Participant {padNo(rec.number)}</p>
           {rec.display_name && <p style={{ fontSize: '1.15rem' }}>That’s <strong>{rec.display_name}</strong>.</p>}
-          <p className="small muted">This is final — and it’s your secret to keep.</p>
+          <p className="small muted">That’s your person. Keep it zipped.</p>
           <Link className="btn" href={`/room/${roomId}/recipient`}>Open their Christmas Identity →</Link>
         </div>
       </div>
@@ -57,7 +57,8 @@ export default function BigDraw({ roomId, decoys, initial }: { roomId: string; d
       {phase === 'idle' && (
         <>
           <p className="muted" style={{ maxWidth: 380 }}>Somewhere in this envelope is the name of the person you’ll surprise this Christmas.</p>
-          <button className="btn btn-invite" onClick={draw}>Open the envelope ✦</button>
+          <button className="btn btn-invite" onClick={draw}>OPEN MY ENVELOPE</button>
+          <p className="small muted">Once opened, it can’t be undone.</p>
         </>
       )}
       {error && <div className="error">{error}</div>}

@@ -69,13 +69,13 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
         </div>
         <div>
           <label htmlFor="budget">Gift budget (optional)</label>
-          <input id="budget" maxLength={120} placeholder="₦10,000 – ₦15,000" value={v.budget_note} onChange={set('budget_note')} />
+          <input id="budget" maxLength={120} placeholder="₦10,000 to ₦15,000" value={v.budget_note} onChange={set('budget_note')} />
         </div>
       </div>
 
       <div className="card stack">
-        <h3>Key dates</h3>
-        <p className="hint">Pick each day on the calendar. Registration closes at the end of its day; the draw opens at the start of its day.</p>
+        <h3>Pick your three days</h3>
+        <p className="hint">Tap a day for each. No times, just days. Sign-up closes at the end of its day, and the draw opens at the start of its day.</p>
         <DayPicker
           lockedReg={locked}
           value={{ registration_deadline: toDay(v.registration_deadline), draw_date: toDay(v.draw_date), exchange_date: toDay(v.exchange_date) }}
@@ -89,7 +89,7 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
           <label>
             <input type="radio" name="mode" checked={v.reveal_mode === 'mystery'} disabled={locked} onChange={() => setV({ ...v, reveal_mode: 'mystery' })} />
             <strong>Mystery mode</strong>
-            <span className="hint" style={{ display: 'block' }}>Santas only ever see a code name. Best when there’s an exchange event — gifts are tagged with the code name.</span>
+            <span className="hint" style={{ display: 'block' }}>Santas only ever see a code name. Best when there’s an exchange event, with gifts tagged by code name.</span>
           </label>
           <label>
             <input type="radio" name="mode" checked={v.reveal_mode === 'reveal'} disabled={locked} onChange={() => setV({ ...v, reveal_mode: 'reveal' })} />
@@ -101,7 +101,7 @@ export default function RoomForm({ initial }: { initial?: RoomValues }) {
           <div>
             <label htmlFor="theme">Code-name theme</label>
             <select id="theme" value={v.name_theme} onChange={set('name_theme')}>
-              {THEMES.map((t) => <option key={t.v} value={t.v}>{t.label} — e.g. {t.eg}</option>)}
+              {THEMES.map((t) => <option key={t.v} value={t.v}>{t.label}: {t.eg}</option>)}
             </select>
           </div>
         )}

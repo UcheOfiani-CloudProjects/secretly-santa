@@ -28,11 +28,17 @@ export default async function Organise({ params }: { params: Promise<{ id: strin
           <span className="eyebrow">Organiser</span>
           <h1>{room.name}</h1>
           <div className="row" style={{ gap: 8 }}>
-            <span className={`pill ${drawn ? 'pill-gold' : 'pill-green'}`}>{drawn ? 'Draw sealed' : deadlinePassed ? 'Deadline passed — ready to seal' : 'Registration open'}</span>
+            <span className={`pill ${drawn ? 'pill-gold' : 'pill-green'}`}>{drawn ? 'Draw sealed' : deadlinePassed ? 'Deadline passed, ready to seal' : 'Registration open'}</span>
             <span className="pill">{room.reveal_mode === 'mystery' ? 'Mystery mode' : 'Reveal mode'}</span>
             {me ? <Link className="pill pill-gold" href={`/room/${id}`}>Go to my room view →</Link> : null}
           </div>
-          {!me && !drawn && <p className="small muted">Taking part yourself? Open your own invite link and join like everyone else.</p>}
+          {!me && !drawn && (
+            <div className="card card-gold stack" style={{ gap: 8 }}>
+              <h3>Taking part yourself?</h3>
+              <p className="small muted">You’re the organiser, but you can be in the draw too. You’ll get a code name like everyone else.</p>
+              <Link className="btn" href={`/join/${room.join_code}`}>Join my own room</Link>
+            </div>
+          )}
         </div>
 
         <div className="grid-2">
@@ -40,7 +46,7 @@ export default async function Organise({ params }: { params: Promise<{ id: strin
             <div className="card card-gold stack">
               <span className="eyebrow">Draw sealed</span>
               <h3>Everyone has a Secret Santa</h3>
-              <p className="small muted">Envelopes open on {fmtDate(room.draw_date)}. If someone drops out, remove them below — their Santa is automatically given a new recipient and nobody else is affected.</p>
+              <p className="small muted">Envelopes open on {fmtDate(room.draw_date)}. If someone drops out, remove them below. Their Santa is automatically given a new recipient and nobody else is affected.</p>
             </div>
           )}
           {!drawn && <DrawPanel roomId={id} count={people.length} incomplete={people.filter((p) => !p.profile_complete).length} deadlinePassed={deadlinePassed} />}

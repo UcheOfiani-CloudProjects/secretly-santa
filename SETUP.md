@@ -92,3 +92,23 @@ Once that works, delete the test room data in Supabase (Table Editor â†’ rooms â
 - Changing IDs in a URL gets nothing: every check happens on the server against the signed-in account.
 
 Run `npm run test:db` to re-run the 13 automated checks on the draw and privacy rules.
+
+---
+
+## 5. Install on phones + reminders (optional, switch on when ready)
+
+**Install:** nothing to set up. People open the link, then use "Add to Home Screen" (the Home screen shows a hint).
+
+**Reminders** (registration closes tomorrow, draw day, gift day tomorrow, and "names are drawn"):
+
+1. Supabase > SQL Editor > paste `supabase/push.sql` > Run.
+2. Supabase > Project Settings > API > copy the **service_role** key (keep it secret).
+3. Vercel > Project > Settings > Environment Variables, add these, then **Redeploy**:
+   - `NEXT_PUBLIC_VAPID_PUBLIC_KEY` and `VAPID_PUBLIC_KEY`: the same public key
+   - `VAPID_PRIVATE_KEY`: the private key
+   - `VAPID_SUBJECT`: `mailto:you@yourmail.com`
+   - `SUPABASE_SERVICE_ROLE_KEY`: from step 2
+   - `CRON_SECRET`: any long random text
+4. Never put the private key, service_role key or CRON_SECRET in GitHub.
+
+Reminders go out once a day around 8am Lagos time. On iPhone, people must add the app to their Home Screen first (iOS 16.4 or newer).

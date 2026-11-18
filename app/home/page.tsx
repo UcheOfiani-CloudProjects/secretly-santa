@@ -4,6 +4,7 @@ import TopBar from '@/components/TopBar';
 import SignIn from '@/components/SignIn';
 import JoinByCode from '@/components/JoinByCode';
 import { fmtDate } from '@/lib/format';
+import AppHelpers from '@/components/AppHelpers';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export default async function Home() {
         <div className="stack-lg">
           <div className="stack" style={{ gap: 8 }}>
             <span className="eyebrow">Welcome</span>
-            <h1>Your Christmas rooms await</h1>
+            <h1>Your Christmas rooms</h1>
           </div>
           <SignIn next="/home" />
         </div>
@@ -70,10 +71,12 @@ export default async function Home() {
           </div>
         )}
 
+        <AppHelpers />
+
         <div className="grid-2">
           <div className="card stack">
             <h3>Join a room</h3>
-            <p className="small muted">Got a code from your organiser? Enter it here — or just tap the invite link they shared.</p>
+            <p className="small muted">Got a code? Pop it in here. Or just tap the link your organiser sent.</p>
             <JoinByCode />
           </div>
           <div className="card stack">

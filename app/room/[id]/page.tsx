@@ -2,6 +2,7 @@ import Link from 'next/link';
 import TopBar from '@/components/TopBar';
 import Countdown from '@/components/Countdown';
 import AdventStrip from '@/components/AdventStrip';
+import IdentityCard from '@/components/IdentityCard';
 import { loadRoom } from '@/lib/room';
 import { fmtDate, nextEvent, padNo } from '@/lib/format';
 
@@ -16,7 +17,7 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
   const [{ data: roster }, { data: assignment }, { data: identity }] = await Promise.all([
     supabase.rpc('room_roster', { p_room: id }),
     supabase.rpc('my_assignment', { p_room: id, p_reveal: false }),
-    supabase.from('identities').select('loves,wants').eq('participant_id', me!.id).maybeSingle(),
+    supabase.from('identities').select('loves,wants,needs,colours,treats,gift_types,avoid,notes').eq('participant_id', me!.id).maybeSingle(),
   ]);
   const list = (roster ?? []) as Roster;
   const a = assignment as Assignment;
@@ -48,6 +49,16 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
 
         {ev && <div className="card stack"><Countdown to={ev.at} label={ev.label} /><AdventStrip reg={room.registration_deadline} draw={room.draw_date} gift={room.exchange_date} /></div>}
 
+        {profileDone && (
+          <div className="stack" style={{ gap: 10 }}>
+            <div className="row" style={{ justifyContent: 'space-between' }}>
+              <span className="eyebrow">My Christmas Identity</span>
+              <Link className="pill pill-gold" href={`/room/${id}/identity`}>{registrationOpen ? 'View / edit →' : 'View →'}</Link>
+            </div>
+            <IdentityCard compact codeName={me!.code_name} number={padNo(me!.number)} roomName={room.name} identity={identity as never} />
+          </div>
+        )}
+
         {/* The Big Draw */}
         <div className="card card-gold stack">
           <span className="eyebrow">The Big Draw</span>
@@ -62,7 +73,7 @@ export default async function RoomHub({ params }: { params: Promise<{ id: string
           ) : a.state === 'ready' ? (
             <>
               <h2>Your recipient is waiting</h2>
-              <p className="muted">The names have been drawn. Tap below when you’re ready — once revealed, it’s yours for good.</p>
+              <p className="muted">The names are in! Open your envelope when you’re ready. Once it’s open, it’s yours to keep secret.</p>
               <Link className="btn btn-invite" href={`/room/${id}/draw`}>Discover my recipient →</Link>
             </>
           ) : a.state === 'waiting' ? (
